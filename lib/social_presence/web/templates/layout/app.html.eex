@@ -14,12 +14,8 @@
   <body>
     <div class="container">
       <header class="header">
-        <nav role="navigation">
-          <ul class="nav nav-pills pull-right">
-            <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
-          </ul>
-        </nav>
-        <span class="logo"></span>
+        <h2><%= gettext "Welcome. Your user id is %{user_id}.", user_id: @user.id %></h2>
+        <p>You can pick your user id by changing it in the url. Or get a new <a href="<%= page_path(@conn, :index)%>">random one</a>.</p>
       </header>
 
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
@@ -30,6 +26,10 @@
       </main>
 
     </div> <!-- /container -->
+    <script>
+      window.userToken = "<%= @token %>"
+      window.userId = <%= @user.id %>
+    </script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
