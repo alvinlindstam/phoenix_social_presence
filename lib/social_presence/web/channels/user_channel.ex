@@ -1,12 +1,23 @@
 defmodule SocialPresence.Web.UserChannel do
   use SocialPresence.Web, :channel
 
+  alias SocialPresence.Web.MyPresence
+
   def join("user:" <> user_id_str, payload, socket) do
     if to_string(socket.assigns.user_id) == user_id_str do
+        send(self, :after_join)
         {:ok, socket}
     else
         {:error, %{reason: "unauthorized"}}
     end
+  end
+
+  def handle_info(:after_join, socket) do
+    push socket, "presence_state", MyPresence.list(socket)
+    {:ok, _} = MyPresence.track(socket, socket.assigns.user_id, %{
+      online_at: inspect(System.system_time(:seconds))
+    })
+    {:noreply, socket}
   end
 
   # Channels can be used in a request/response fashion

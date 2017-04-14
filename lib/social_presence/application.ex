@@ -10,6 +10,7 @@ defmodule SocialPresence.Application do
     children = [
       # Start the endpoint when the application starts
       supervisor(SocialPresence.Web.Endpoint, []),
+      supervisor(SocialPresence.Web.MyPresence, []),
       # Start your own worker by calling: SocialPresence.Worker.start_link(arg1, arg2, arg3)
       # worker(SocialPresence.Worker, [arg1, arg2, arg3]),
     ]
