@@ -1,11 +1,11 @@
 defmodule SocialPresence.Web.UserChannel do
   use SocialPresence.Web, :channel
 
-  def join("user:lobby", payload, socket) do
-    if authorized?(payload) do
-      {:ok, socket}
+  def join("user:" <> user_id_str, payload, socket) do
+    if to_string(socket.assigns.user_id) == user_id_str do
+        {:ok, socket}
     else
-      {:error, %{reason: "unauthorized"}}
+        {:error, %{reason: "unauthorized"}}
     end
   end
 
@@ -20,10 +20,5 @@ defmodule SocialPresence.Web.UserChannel do
   def handle_in("shout", payload, socket) do
     broadcast socket, "shout", payload
     {:noreply, socket}
-  end
-
-  # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
   end
 end

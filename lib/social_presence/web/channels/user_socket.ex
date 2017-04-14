@@ -2,7 +2,7 @@ defmodule SocialPresence.Web.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", SocialPresence.Web.RoomChannel
+  channel "user:*", SocialPresence.Web.UserChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -19,8 +19,13 @@ defmodule SocialPresence.Web.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
+  def connect(%{"token" => token}, socket) do
+    case Phoenix.Token.verify(socket, "user", token) do
+      {:ok, user_id} ->
+        {:ok, assign(socket, :user_id, user_id)}
+      {:error, _} ->
+        :error
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
