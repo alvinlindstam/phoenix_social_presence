@@ -3,7 +3,7 @@
 
 // To use Phoenix channels, the first step is to import Socket
 // and connect at the socket path in "lib/web/endpoint.ex":
-import {Socket} from "phoenix"
+import {Socket, Presence} from "phoenix"
 
 let socket = new Socket("/socket", {params: {token: window.userToken}})
 
@@ -53,8 +53,34 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 
 socket.connect()
 
+const renderPresences = (presences) => {
+  const listed_presences = Presence.list(presences, (user, {metas: metas}) => {
+    return {
+      user: user,
+      onlineAt: new Date(parseInt(metas[0].online_at) * 1000)
+    }
+  })
+  document.getElementById('presences').innerHTML = listed_presences
+    .map(presence => `<p><strong>${presence.user}</strong> <small>online since ${presence.onlineAt}</small></p>`)
+    .join("")
+}
+
+let presences = {}
+const handlePresenceDiff = diff => {
+  presences = Presence.syncDiff(presences, diff)
+  renderPresences(presences)
+}
+const handlePresenceState = state => {
+  presences = Presence.syncState(presences, state)
+  renderPresences(presences)
+}
+
 // Now that you are connected, you can join channels with a topic:
 let channel = socket.channel("user:" + window.userId, {})
+
+channel.on("presence_state", handlePresenceState)
+channel.on("presence_diff", handlePresenceDiff)
+
 channel.join()
   .receive("ok", resp => { console.log("Joined successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })
