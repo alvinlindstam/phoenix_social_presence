@@ -81,6 +81,13 @@ let channel = socket.channel("user:" + window.userId, {})
 channel.on("presence_state", handlePresenceState)
 channel.on("presence_diff", handlePresenceDiff)
 
+// Handle messages that are sent to topics that don't have a client side representation
+socket.onMessage(({topic, event, payload}) => {
+  if (event == "presence_diff" && /^user_presence:\d+$/.test(topic)) {
+    handlePresenceDiff(payload)
+  }
+})
+
 channel.join()
   .receive("ok", resp => { console.log("Joined successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })
