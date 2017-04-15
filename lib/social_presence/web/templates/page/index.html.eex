@@ -1,5 +1,5 @@
 <div>
-  <h3>Currently present users</h3>
+  <h3>Currently present users that you follow:</h3>
   <div id="presences">
   </div>
 </div>
