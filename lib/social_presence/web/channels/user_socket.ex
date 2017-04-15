@@ -3,6 +3,8 @@ defmodule SocialPresence.Web.UserSocket do
 
   ## Channels
   channel "user:*", SocialPresence.Web.UserChannel
+  # "user_presence:*" is not meant to be joined, added here to clarify that the topic prefix is used be the UserChannel
+  channel "user_presence:*", SocialPresence.Web.UserChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

@@ -12,6 +12,10 @@ defmodule SocialPresence.Web.UserChannel do
     end
   end
 
+  def join("user_presence:" <> _rest, payload, socket) do
+    {:error, %{reason: "unauthorized"}}
+  end
+
   def handle_info(:after_join, socket = %{assigns: %{user_id: user_id}}) do
     friend_list = [user_id, user_id + 1]
     presence_state = get_and_subscribe_presence_multi socket, friend_list(user_id)
