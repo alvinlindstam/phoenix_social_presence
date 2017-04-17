@@ -74,4 +74,9 @@ defmodule SocialPresence.Web.MyPresence do
   """
   use Phoenix.Presence, otp_app: :social_presence,
                         pubsub_server: SocialPresence.PubSub
+
+  def fetch(_topic, presences) do
+    Process.sleep(Enum.count(presences) * 1000)
+    presences
+  end
 end
