@@ -3,6 +3,11 @@ defmodule SocialPresence.Web.UserChannel do
 
   alias SocialPresence.Web.MyPresence
 
+  def join("user:all", payload, socket) do
+    send(self, :after_join)
+    {:ok, socket}
+  end
+
   def join("user:" <> user_id_str, payload, socket) do
     if to_string(socket.assigns.user_id) == user_id_str do
         send(self, :after_join)

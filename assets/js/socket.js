@@ -76,7 +76,7 @@ const handlePresenceState = state => {
 }
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("user:" + window.userId, {})
+let channel = socket.channel("user:all", {})
 
 channel.on("presence_state", handlePresenceState)
 channel.on("presence_diff", handlePresenceDiff)
