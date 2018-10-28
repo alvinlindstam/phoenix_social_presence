@@ -82,9 +82,9 @@ channel.on("presence_state", handlePresenceState)
 channel.on("presence_diff", handlePresenceDiff)
 
 // Handle messages that are sent to topics that don't have a client side representation
-socket.onMessage(({topic, event, payload}) => {
+socket.onMessage(({topic, event, payload, ref, join_ref}) => {
   if (event == "presence_diff" && /^user_presence:\d+$/.test(topic)) {
-    handlePresenceDiff(payload)
+    channel.trigger(event, payload, ref, join_ref)
   }
 })
 
